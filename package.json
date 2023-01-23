@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/adriennecordell/social-API/issues"
   },
-  "homepage": "https://github.com/adriennecordell/social-API#readme"
+  "homepage": "https://github.com/adriennecordell/social-API#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }

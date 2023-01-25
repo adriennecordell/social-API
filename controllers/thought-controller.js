@@ -1,6 +1,6 @@
 const { Thought, User } = require("../models");
 
-const thoughtController = {
+const thoughtControl = {
  
   getAllThought(req, res) {
     Thought.find({})
@@ -26,7 +26,7 @@ const thoughtController = {
       .select("-__v")
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
-          return res.status(404).json({ message: "This id doesnt not match a thought!" });
+          return res.status(404)
         }
         res.json(dbThoughtData);
       })
@@ -36,7 +36,7 @@ const thoughtController = {
       });
   },
 
-  createThought({ params, body }, res) {
+  addThought({ params, body }, res) {
     Thought.create(body)
       .then(({ _id }) => {
         return User.findOneAndUpdate(
@@ -49,12 +49,9 @@ const thoughtController = {
         if (!dbUserData) {
           return res
             .status(404)
-            .json({ message: "Thought was created but id does not match a user!" });
         }
-
-        res.json({ message: "Created a Thought!" });
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   },
 
   updateThought({ params, body }, res) {
@@ -64,21 +61,21 @@ const thoughtController = {
     })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
-          res.status(404).json({ message: "This id doesnt not match a thought!" });
+          res.status(404)
           return;
         }
         res.json(dbThoughtData);
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   },
 
   deleteThought({ params }, res) {
     Thought.findOneAndDelete({ _id: params.id })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
-          return res.status(404).json({ message: "This id doesnt not match a thought!" });
+          return res
+          .status(404)
         }
-
         return User.findOneAndUpdate(
           { thoughts: params.id },
           { $pull: { thoughts: params.id } }, 
@@ -89,14 +86,12 @@ const thoughtController = {
         if (!dbUserData) {
           return res
             .status(404)
-            .json({ message: "Thought was created but id does not match a user!" });
         }
-        res.json({ message: "Deleted!" });
       })
       .catch((err) => res.json(err));
   },
 
-  addReaction({ params, body }, res) {
+  createReaction({ params, body }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
       { $addToSet: { reactions: body } },
@@ -104,23 +99,24 @@ const thoughtController = {
     )
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
-          res.status(404).json({ message: "This id does not match a thought!" });
+          res
+          .status(404)
           return;
         }
         res.json(dbThoughtData);
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   },
 
-  removeReaction({ params }, res) {
+  deleteReaction({ params }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
       { $pull: { reactions: { reactionId: params.reactionId } } },
       { new: true }
     )
       .then((dbThoughtData) => res.json(dbThoughtData))
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   },
 };
 
-module.exports = thoughtController;
+module.exports = thoughtControl;

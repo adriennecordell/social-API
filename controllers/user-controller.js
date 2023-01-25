@@ -1,6 +1,6 @@
 const { User, Thought } = require("../models");
 
-const userController = {
+const userControl = {
 
   getAllUser(req, res) {
     User.find({})
@@ -32,17 +32,15 @@ const userController = {
         if (!dbUserData) {
           return res
             .status(404)
-            .json({ message: "This id does not match a user!" });
         }
         res.json(dbUserData);
       })
       .catch((err) => {
         console.log(err);
-        res.sendStatus(400);
       });
   },
 
-  createUser({ body }, res) {
+  addUser({ body }, res) {
     User.create(body)
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.json(err));
@@ -55,12 +53,12 @@ const userController = {
     })
       .then((dbUserData) => {
         if (!dbUserData) {
-          res.status(404).json({ message: "This id does not match a user!" });
+          res.status(404)
           return;
         }
         res.json(dbUserData);
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   },
 
   addFriend({ params }, res) {
@@ -71,12 +69,12 @@ const userController = {
     )
       .then((dbUserData) => {
         if (!dbUserData) {
-          res.status(404).json({ message: "No user with this id" });
+          res.status(404)
           return;
         }
         res.json(dbUserData);
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   },
 
   removeFriend({ params }, res) {
@@ -87,11 +85,11 @@ const userController = {
     )
       .then((dbUserData) => {
         if (!dbUserData) {
-          return res.status(404).json({ message: "No user with this id!" });
+          return res.status(404)
         }
         res.json(dbUserData);
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   },
 };
-module.exports = userController;
+module.exports = userControl;

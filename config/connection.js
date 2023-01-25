@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-
 mongoose.connect(
     process.env.MONGODB_URI || "mongodb://localhost:",
     {
@@ -8,5 +7,4 @@ mongoose.connect(
     }
 )
 mongoose.set("debug", true)
-
 module.exports = mongoose.connect

@@ -1,39 +1,52 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
+const { Schema, model } = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+// Schema to create User model
+const userSchema = new Schema(
+  {
     username: {
         type: String,
+        unique:true,
         required: true,
-        unique: true,
-        trim: true
-    },
-    email: {
+        trim:true
+
+      },
+      email: {
         type: String,
         required: true,
-        unique: true,
-        validate: [validator.isEmail, 'Please enter a valid email!']
+        unique:true,
+        match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, 'Please enter a valid email']
+
+      },
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Thought',
+      },
+    ],
+    friends: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+        },
+      ],
+  },
+  {
+    toJSON: {
+      virtuals: true,
     },
-    thoughts: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'Thought'
-    }],
-    friends: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'User',
-    }]
+    id: false,
+  }
+);
 
-}, {
-    //Does not display id
-    timestamps: true,
-    // id: false
-})
+//Create a virtual called `friendCount` that retrieves the length of the user's `friends` array field on query.
+userSchema
+  .virtual(`friendCount`)
+  // Getter
+  .get(function () {
+    return this.friends.length;
+  })
 
-UserSchema.virtual('friendCount')
-    // Create a virtual called friendCount that retrieves the length of the user's friends array field on query.
-    .get(function () {
-        return this.friends.length
-    })
+// Initialize our User model
+const User = model('User', userSchema);
 
-const User = mongoose.model('User', UserSchema)
-module.exports = User
+module.exports = User;

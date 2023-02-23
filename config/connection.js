@@ -1,10 +1,6 @@
-const mongoose = require("mongoose")
-mongoose.connect(
-    process.env.MONGODB_URI || "mongodb://localhost:",
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }
-)
-mongoose.set("debug", true)
-module.exports = mongoose.connect
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.MONGODB_URI ||
+    'mongodb://127.0.0.1:27017/socialDB')
+
+module.exports = mongoose.connection

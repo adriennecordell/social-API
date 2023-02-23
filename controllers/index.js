@@ -1,5 +1,5 @@
-const usersController = require('./usersController')
-const thoughtsController = require('./thoughtsController')
+const usersController = require('./users-controller')
+const thoughtsController = require('./thoughts-controller')
 
 module.exports = {
     usersController,

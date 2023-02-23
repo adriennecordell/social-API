@@ -1,6 +1,4 @@
-const { Schema, model } = require('mongoose');
-
-// Reaction Schema- This will not be a model, but rather will be used as the `reaction` field's subdocument schema in the `Thought` model.
+const { Schema, model } = require('mongoose')
 const reactionSchema = new Schema(
     {
         reactionId: {
@@ -11,7 +9,7 @@ const reactionSchema = new Schema(
         reactionBody: {
             type: String,
             required:true,
-            maxlength: 280
+            maxlength: 185
 
         },
         username: {
@@ -32,10 +30,6 @@ const reactionSchema = new Schema(
         id: false,
     }
 );
-
-
-
-// Schema to create Thought model
 const thoughtSchema = new Schema(
     {
         thoughtText: {
@@ -58,8 +52,6 @@ const thoughtSchema = new Schema(
         reactions: [reactionSchema],
     },
     {
-        // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
-        // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
         toJSON: {
             virtuals: true,
         },
@@ -67,12 +59,10 @@ const thoughtSchema = new Schema(
     }
 );
 
-// Create a virtual called `reactionCount` that retrieves the length of the thought's `reactions` array field on query.
 thoughtSchema.virtual(`reactionCount`).get(function () {
     return this.reactions.length;
 });
 
-// Initialize our Post model
-const Thought = model('Thought', thoughtSchema);
+const Thought = model('Thought', thoughtSchema)
 
-module.exports = Thought;
+module.exports = Thought

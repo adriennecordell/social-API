@@ -1,7 +1,6 @@
 const { User, Thought } = require('../models');
 
 const thoughtController = {
-  //get all thoughts
   getThoughts(req, res) {
     Thought.find()
       .populate({
@@ -9,9 +8,8 @@ const thoughtController = {
         select: '-__v'
       })
       .then((thoughts) => res.json(thoughts))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(500))
   },
-  //get one thought by id
   getSingleThought(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
       .select('-__v')
@@ -21,12 +19,12 @@ const thoughtController = {
       })
       .then((thought) =>
         !thought
-          ? res.status(404).json({ message: 'No thought with that ID' })
+          ? res.status(404)
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
   },
-  // create a new thought
+
   createThought(req, res) {
     console.log(req.body);
     Thought.create(req.body)
@@ -38,7 +36,7 @@ const thoughtController = {
                 { new: true })
                 .then((user) =>
                     !user
-                        ? res.status(404).json({ message: 'No user with that ID, but thought was created' })
+                        ? res.status(404)
                         : res.json(thought)
 
                 )
@@ -46,7 +44,6 @@ const thoughtController = {
         })
 },
     
-  //update a thought
 updateThought(req,res){
   Thought.findOneAndUpdate(
     { _id: req.params.thoughtId },
@@ -55,7 +52,7 @@ updateThought(req,res){
   )
     .then((thought) =>
       !thought
-        ? res.status(404).json({ message: 'No thought with this id!' })
+        ? res.status(404)
         : res.json(thought)
     )
     .catch((err) => {
@@ -64,12 +61,12 @@ updateThought(req,res){
     }
   )
 },
-  //delete a thought 
+ 
   deleteThought(req, res) {
     Thought.findOneAndDelete({ _id: req.params.thoughtId })
       .then((thought) =>{
         if (!thought) {
-          res.status(404).json({ message: 'No thoughts found with that id!' });
+          res.status(404)
           return;
         }
         return User.findOneAndUpdate(
@@ -80,7 +77,7 @@ updateThought(req,res){
       })
       .then(userData => {
         if (!userData) {
-          res.status(404).json({ message: 'No User found with this id but thought deleted!' });
+          res.status(404)
           return;
         }
         res.json(userData);
@@ -88,7 +85,6 @@ updateThought(req,res){
       .catch(err => res.json(err));
   },
 
-  //add reactions
   addReaction (req,res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
@@ -99,17 +95,16 @@ updateThought(req,res){
     .select('-__v')
       .then((thought) =>
         !thought
-          ? res.status(404).json({ message: 'No thought with this id!' })
+          ? res.status(404)
           : res.json(thought)
       )
       .catch((err) => {
         console.log(err);
-        res.status(500).json(err);
+        res.status(500)
       }
     )
   },
 
-  //delete reaction
   deleteReaction({params}, res){
     Thought.findOneAndUpdate(
         {_id: params.thoughtId},
@@ -118,7 +113,7 @@ updateThought(req,res){
     )
     .then(thoughtData => {
         if (!thoughtData) {
-            res.status(404).json({ message: 'Incorrect reaction data!' });
+            res.status(404)
             return;
         }
         res.json(thoughtData);

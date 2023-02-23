@@ -1,13 +1,11 @@
-const { User, Thought } = require('../models');
+const { User, Thought } = require('../models')
 
 const userController = {
-  //get all users
   getUsers(req, res) {
     User.find()
       .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(500).json(err))
   },
-  //get one user by id
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select('-__v')
@@ -21,18 +19,16 @@ const userController = {
       })
       .then((user) =>
         !user
-          ? res.status(404).json({ message: 'No user with that ID' })
+          ? res.status(404)
           : res.json(user)
       )
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(500),json(err))
   },
-  // create a new user
   createUser(req, res) {
     User.create(req.body)
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(500).json(err));
   },
-  //update a user
 updateUser(req,res){
   User.findOneAndUpdate(
     { _id: req.params.userId },
@@ -41,27 +37,25 @@ updateUser(req,res){
   )
     .then((user) =>
       !user
-        ? res.status(404).json({ message: 'No user with this id!' })
+        ? res.status(404)
         : res.json(user)
     )
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(500).json(err)
     }
   )
 },
-  //delete a user and associated thoughts
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId })
       .then((user) =>
         !user
-          ? res.status(404).json({ message: 'No user with that ID' })
+          ? res.status(404)
           : Thought.deleteMany({ _id: { $in: user.thoughts } })
       )
-      .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
-      .catch((err) => res.status(500).json(err));
+      .then(() => res.json({ message: 'Deleted' }))
+      .catch((err) => res.status(500))
   },
-  //add friend
   addFriend (req,res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -70,17 +64,15 @@ updateUser(req,res){
     )
       .then((user) =>
         !user
-          ? res.status(404).json({ message: 'No user with this id!' })
+          ? res.status(404)
           : res.json(user)
       )
       .catch((err) => {
         console.log(err);
-        res.status(500).json(err);
+        res.status(500).json(err)
       }
     )
   },
-
-  //delete friend
   deleteFriend (req,res){
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -89,12 +81,12 @@ updateUser(req,res){
     )
       .then((user) =>
         !user
-          ? res.status(404).json({ message: 'No user with this id!' })
+          ? res.status(404)
           : res.json(user)
       )
       .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
+        console.log(err)
+        res.status(500)
       }
     )
   }
